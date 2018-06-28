@@ -12,6 +12,10 @@ import '../static/adaption.js'
 import Mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
 Vue.use(Mint)
+//引用axios并挂载到vue上
+import Axios from 'axios'
+Vue.prototype.$axios=Axios
+
 Vue.use(vuex)
 
 

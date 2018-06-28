@@ -1,8 +1,6 @@
 <template>
     <div>
         <banner class="index-banner" :swiperDatas='indexSwiper'></banner>
-
-        <mt-button type="default">default</mt-button>
     </div>
 </template>
 <script>
@@ -10,20 +8,20 @@ import Banner from '@/components/banner'
 export default {
     data(){
         return{
-            indexSwiper:[
-                {
-                    url:'https://al-qn-echo-image-cdn.app-echo.com/FpEuAAW1hzrRFzjjseWQn8SC8NL2.jpg?imageMogr2/auto-orient/quality/100%7CimageView2/4/w/640/q/100',
-                    alt:''
-                },
-                {
-                    url:'https://al-qn-echo-image-cdn.app-echo.com/FpEuAAW1hzrRFzjjseWQn8SC8NL2.jpg?imageMogr2/auto-orient/quality/100%7CimageView2/4/w/640/q/100',
-                    alt:''
-                }
-            ]
+            indexSwiper:[]
         }
     },
     components:{
         Banner
+    },
+    mounted(){
+        this.$axios.get('https://www.easy-mock.com/mock/5b34aeb8e1815c19167faa21/imitecho/')
+        .then((res)=>{
+            console.log(res.data.data.banner);
+            this.indexSwiper=res.data.data.banner
+        }).catch((error)=>{
+            alert(error)
+        })
     }
 }
 </script>
