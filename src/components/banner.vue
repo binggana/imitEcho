@@ -32,6 +32,7 @@ export default {
           display:block;width: 100%
       }  
     }
+    .mint-swipe-indicator.is-active{opacity: .5;}
     .slide1{
         background-color: #000
     }
