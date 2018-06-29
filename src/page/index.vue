@@ -5,7 +5,9 @@
             <h2 class="title">echo每日推荐</h2>
             <div class="lists">
                 <div class="lists-time">12分钟前推荐</div>
-                <recommand-list :listsData='lists'></recommand-list>
+                <recommand-list :listsData='lists' v-infinite-scroll="loadMore"
+  infinite-scroll-disabled="loading"
+  infinite-scroll-distance="10"></recommand-list>
             </div>
         </div>
     </div>
@@ -18,16 +20,16 @@ export default {
         return{
             indexSwiper:[],
             lists:[
-                {
-                    img:'https://al-qn-echo-image-cdn.app-echo.com/FqL7xUo5Rej8mj7Dy-Ivpy7sl94K?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!500x500r/gravity/Center/crop/500x500/dx/0/dy/0',
-                    detailId:'010',
-                    tagColor:'tag_blue',
-                    title:'A$AP Ferg 来听低音饶舌爽一下吧 Swipe Life'
-                },
-                {
-                    img:'https://qn-qn-echo-image-cdn.app-echo.com/FmaSczxYpcBfaV6oMemCTIqV4o6L?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!500x500r/gravity/Center/crop/500x500/dx/0/dy/0',
-                    detailId:'010'
-                }
+                // {
+                //     img:'https://al-qn-echo-image-cdn.app-echo.com/FqL7xUo5Rej8mj7Dy-Ivpy7sl94K?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!500x500r/gravity/Center/crop/500x500/dx/0/dy/0',
+                //     detailId:'010',
+                //     tagColor:'tag_blue',
+                //     title:'A$AP Ferg 来听低音饶舌爽一下吧 Swipe Life',
+                //     channel:{
+                //         id:'c01',
+                //         txt:'Hip Hop街区'
+                //     }
+                // }
             ]
         }
     },
@@ -42,7 +44,31 @@ export default {
             this.indexSwiper=res.data.data.banner
         }).catch((error)=>{
             alert(error)
+        });
+
+        let page=0,pagesize=10;
+        this.$axios.post('https://www.easy-mock.com/mock/5b34aeb8e1815c19167faa21/imitecho/reclists',{
+            page:page
         })
+        .then((res)=>{
+            console.log(res);
+            this.lists=res.data.lists;
+        }).catch((error)=>{
+            alert(error)
+        });
+
+    },
+    methods:{
+        loadMore() {
+            this.loading = true;
+            setTimeout(() => {
+                let last = this.list[this.list.length - 1];
+                for (let i = 1; i <= 10; i++) {
+                this.list.push(last + i);
+                }
+                this.loading = false;
+            }, 2500);
+        }
     }
 }
 </script>

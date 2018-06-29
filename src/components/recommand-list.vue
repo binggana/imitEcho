@@ -17,9 +17,9 @@
                </router-link>
                <!-- 列表标题和文字 -->
                <div class="playlist-txt">
-                   <p>{{item.title}}</p>
+                   <p class="txt-over-hidden">{{item.title}}</p>
                    <div class="channel-box" v-if='item.channel'>
-                       <router-link :to="'/channel'+item.channel.id">{{item.channel.txt}}</router-link>
+                       <router-link :to="'/channel/'+item.channel.id" class="txt-over-hidden">{{item.channel.txt}}</router-link>
                        <span class="txt-sm-grey">频道</span>
                    </div>
                </div>
@@ -57,6 +57,16 @@ export default {
                     background-image: url('http://www.app-echo.com/images/echo_mobile_sprites@3_8.png');
                     background-repeat: no-repeat;height: 100%;
                     background-size: 320px;margin: 0 auto
+                }
+            }
+            .playlist-txt{
+                padding: .12rem 0;
+                text-align: left;
+                .channel-box{
+                    display: flex;
+                    justify-content: space-between;
+                    a{color: #7DD97F}
+                    span{flex-shrink: 0}
                 }
             }
         }
