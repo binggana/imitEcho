@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <set-title>echo回声 | 潮流音乐生活方式-3D音乐 弹幕社交 趣味铃声 变声录音 KTV</set-title>
     <transition name='fade' mode='out-in'>
       <router-view/>
     </transition>

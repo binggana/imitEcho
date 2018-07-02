@@ -306,5 +306,7 @@ body{font-size: .26rem}
 .clearfix:after{visibility:hidden;display: block;content: '';clear: both;height: 0;font-size: 0;}
 .thumbnailW img{display: block;width: 100%;height: auto;}
 .tag_blue{background-position: -299px -215px;}
+.tag_red{background-position: -162px -215px;}
+.tag_orange{background-position: 0px -215px;}
 .txt-sm-grey{font-size: .24rem;color: #999999;}
 .txt-over-hidden{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}

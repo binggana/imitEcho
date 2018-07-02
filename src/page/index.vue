@@ -1,5 +1,6 @@
 <template>
     <div>
+        <set-title>首页--为您推荐</set-title>
         <banner class="index-banner" :swiperDatas='indexSwiper'></banner>
         <div class="recommand">
             <h2 class="title">echo每日推荐</h2>
@@ -8,102 +9,133 @@
                 <recommand-list :listsData='lists' v-infinite-scroll="loadMore"
   infinite-scroll-disabled="loading"
   infinite-scroll-distance="10"></recommand-list>
+  
+                <mt-spinner type="triple-bounce" color="#7DD97F" v-show='loading'></mt-spinner>
             </div>
         </div>
     </div>
 </template>
 <script>
-import Banner from '@/components/banner'
-import RecommandList from '@/components/recommand-list'
+import Banner from "@/components/banner";
+import RecommandList from "@/components/recommand-list";
 export default {
-    data(){
-        return{
-            indexSwiper:[],
-            lists:[
-                // {
-                //     img:'https://al-qn-echo-image-cdn.app-echo.com/FqL7xUo5Rej8mj7Dy-Ivpy7sl94K?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!500x500r/gravity/Center/crop/500x500/dx/0/dy/0',
-                //     detailId:'010',
-                //     tagColor:'tag_blue',
-                //     title:'A$AP Ferg 来听低音饶舌爽一下吧 Swipe Life',
-                //     channel:{
-                //         id:'c01',
-                //         txt:'Hip Hop街区'
-                //     }
-                // }
-            ]
-        }
-    },
-    components:{
-        Banner,
-        RecommandList
-    },
-    mounted(){
-        this.$axios.get('https://www.easy-mock.com/mock/5b34aeb8e1815c19167faa21/imitecho/')
-        .then((res)=>{
-            console.log(res.data.data.banner);
-            this.indexSwiper=res.data.data.banner
-        }).catch((error)=>{
-            alert(error)
-        });
+  data() {
+    return {
+      indexSwiper: [],
+      lists: [
+        // {
+        //     img:'https://al-qn-echo-image-cdn.app-echo.com/FqL7xUo5Rej8mj7Dy-Ivpy7sl94K?imageMogr2/auto-orient/quality/100%7CimageMogr2/thumbnail/!500x500r/gravity/Center/crop/500x500/dx/0/dy/0',
+        //     detailId:'010',
+        //     tagColor:'tag_blue',
+        //     title:'A$AP Ferg 来听低音饶舌爽一下吧 Swipe Life',
+        //     channel:{
+        //         id:'c01',
+        //         txt:'Hip Hop街区'
+        //     }
+        // }
+      ],
+      page: 0,
+      loading:false
+    };
+  },
+  components: {
+    Banner,
+    RecommandList
+  },
+  mounted() {
+    this.$axios
+      .get("https://www.easy-mock.com/mock/5b34aeb8e1815c19167faa21/imitecho/")
+      .then(res => {
+        console.log(res.data.data.banner);
+        this.indexSwiper = res.data.data.banner;
+      })
+      .catch(error => {
+        alert(error);
+      });
 
-        let page=0,pagesize=10;
-        this.$axios.post('https://www.easy-mock.com/mock/5b34aeb8e1815c19167faa21/imitecho/reclists',{
-            page:page
+    var pagesize = 10;
+    this.$axios.post(
+        "https://www.easy-mock.com/mock/5b34aeb8e1815c19167faa21/imitecho/reclists",
+        {
+          page: this.page
+        }
+      )
+      .then(res => {
+        console.log(res);
+        this.lists = res.data.lists;
+        this.page++;
+      })
+      .catch(error => {
+        alert(error);
+      });
+  },
+  methods: {
+    loadMore() {
+      console.log(this.page, this.loading);
+      this.loading = true;
+      this.$axios.post(
+          "https://www.easy-mock.com/mock/5b34aeb8e1815c19167faa21/imitecho/reclists",
+          {
+            page: this.page
+          }
+        )
+        .then(res => {
+          res.data.lists.forEach((val)=>{
+            this.lists.push(val);
+          });
+          this.page++;
+          this.loading=false;
         })
-        .then((res)=>{
-            console.log(res);
-            this.lists=res.data.lists;
-        }).catch((error)=>{
-            alert(error)
+        .catch(error => {
+          alert(error);
+          this.loading=false;
         });
-
-    },
-    methods:{
-        loadMore() {
-            this.loading = true;
-            setTimeout(() => {
-                let last = this.list[this.list.length - 1];
-                for (let i = 1; i <= 10; i++) {
-                this.list.push(last + i);
-                }
-                this.loading = false;
-            }, 2500);
-        }
     }
-}
+  }
+};
 </script>
 <style lang='scss' scoped>
-.index-banner{
-    height: 3.2rem;background-color: #e8e8e8;padding:.2rem;
+.index-banner {
+  height: 3.2rem;
+  background-color: #e8e8e8;
+  padding: 0.2rem;
 }
-.index-banner{
-    .mint-swipe-item{
-        height:100%
-    }
+.index-banner {
+  .mint-swipe-item {
+    height: 100%;
+  }
 }
-.recommand{
-    padding: 0 .2rem;
-    text-align:center;
-    h2.title{display: inline-block;padding:.02rem .4rem;font-size: .24rem;background-color: #d6ffd6;color:#639E5E;border-radius: .5rem;margin: .45rem 0}
-    .lists{
-        position: relative;
-        .lists-time{
-            width: 2.34rem;
-            height: .52rem;
-            line-height: .52rem;
-            position: absolute;
-            top:.23rem;
-            left:-.2rem;
-            background-image: url('http://www.app-echo.com/images/echo_mobile_sprites@3_8.png');
-            background-repeat: no-repeat;
-            background-position: -131px -334px;
-            background-size: 400px;
-            z-index: 1;
-            color:#fff;
-            font-size: .2rem;
-            text-align: left;
-            padding-left: .2rem;
-        }
+.recommand {
+  padding: 0 0.2rem;
+  text-align: center;
+  h2.title {
+    display: inline-block;
+    padding: 0.02rem 0.4rem;
+    font-size: 0.24rem;
+    background-color: #d6ffd6;
+    color: #639e5e;
+    border-radius: 0.5rem;
+    margin: 0.45rem 0;
+  }
+  .lists {
+    position: relative;
+    .lists-time {
+      width: 2.34rem;
+      height: 0.52rem;
+      line-height: 0.52rem;
+      position: absolute;
+      top: 0.23rem;
+      left: -0.2rem;
+      background-image: url("http://www.app-echo.com/images/echo_mobile_sprites@3_8.png");
+      background-repeat: no-repeat;
+      background-position: -131px -334px;
+      background-size: 400px;
+      z-index: 1;
+      color: #fff;
+      font-size: 0.2rem;
+      text-align: left;
+      padding-left: 0.2rem;
     }
- }
+  }
+}
 </style>

@@ -39,6 +39,7 @@ export default {
         li{
             width:46%;float:left;
             margin-left:4%;
+            margin-bottom: .2rem;
             position: relative;
             .thumbnailW{
                 width:100%;
@@ -48,8 +49,8 @@ export default {
                 position: absolute;
                 top:.3rem;
                 right:.3rem;
-                width: .44rem;
-                height: .44rem;
+                width: .5rem;
+                height: .5rem;
                 //background-color: #fff;
                 border-radius: 50%;
                 .tag{

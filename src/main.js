@@ -18,6 +18,10 @@ Vue.prototype.$axios=Axios
 
 Vue.use(vuex)
 
+//引入全局组件title
+import setTitle from '@/components/title'
+Vue.component('setTitle',setTitle)
+
 
 Vue.config.productionTip = false
 
