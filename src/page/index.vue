@@ -61,7 +61,7 @@ export default {
         }
       )
       .then(res => {
-        console.log(res);
+        //console.log(res);
         this.lists = res.data.lists;
         this.page++;
       })

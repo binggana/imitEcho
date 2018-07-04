@@ -22,6 +22,11 @@ Vue.use(vuex)
 import setTitle from '@/components/title'
 Vue.component('setTitle',setTitle)
 
+//引用全局过滤器
+import mFilters from '@/filters/custom'
+Object.keys(mFilters).forEach((key)=>{
+  Vue.filter(key,mFilters[key]);
+})
 
 Vue.config.productionTip = false
 
