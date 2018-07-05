@@ -3,7 +3,6 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import vuex from 'vuex'
 //全局公共css和js
 import '@/assets/common.css'
 import '../static/adaption.js'
@@ -16,11 +15,12 @@ Vue.use(Mint)
 import Axios from 'axios'
 Vue.prototype.$axios=Axios
 
-Vue.use(vuex)
-
 //引入全局组件title
 import setTitle from '@/components/title'
 Vue.component('setTitle',setTitle)
+
+//引入vuex
+import store from '@/vuex/store'
 
 //引用全局过滤器
 import mFilters from '@/filters/custom'
@@ -34,6 +34,7 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>'

@@ -12,6 +12,7 @@ const state={
         curTime:0,//播放时间
 
     },
+    playMode:'default',//播放模式
     playList:[],//播放列表
 };
 
@@ -21,7 +22,7 @@ const mutations={
         state.audio.data=val;
     },
     //设置播放状态
-    setAudioState(state,val){
+    setAudioStatus(state,val){
         state.audio.playStatus=val;
     },
     //设置当前歌曲总时长
@@ -46,9 +47,9 @@ const getters={
     }
 }
 
-export default {
+export default new Vuex.Store({
     state,
     mutations,
     getters,
     //actions
-}
+})

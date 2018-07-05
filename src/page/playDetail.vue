@@ -5,16 +5,16 @@
         <div class="top">
             <div class="userinfo">
               <span class="avatar">
-                <img :src="userData.avatar_50" alt="">
+                <img :src="audio.data.user.avatar_50" alt="">
               </span>
-              <span class="txt-over-hidden">{{userData.name}}</span>
+              <span class="txt-over-hidden">{{audio.data.user.name}}</span>
             </div>
-            <div class="fans">粉丝：{{userData.followed_count |numConvert}}</div>
+            <div class="fans">粉丝：{{audio.data.user.followed_count |numConvert}}</div>
         </div>
         <div class="cover">
         <!-- 歌曲封面 -->
           <div class="thumbnailW">
-            <img :src="detailData.pic_500">
+            <img :src="audio.data.pic_500">
           </div>
         <!-- 歌曲信息 -->
         <div class="audioinfo">
@@ -26,8 +26,8 @@
           <div class="audioinfo-box">
               <div class="play-status" :class="{play:isPlay}"></div>
               <div class="audioname">
-                <span>Maroon5最强女声翻唱 Sugar</span>
-                <span>dasffsfsffsfdsfsd</span>
+                <span>{{audio.data.name}}</span>
+                <span class="up-info"><router-link to='/'>{{audio.data.user.name}}</router-link>发布在<router-link to='/'>{{audio.data.channel.name}}</router-link></span>
               </div>
               <div class="danmu-switch" @click.stop='toggleDanmu'>
                 <div class="switch-status" :class="{on:danmuOn}">弹幕</div>
@@ -39,6 +39,7 @@
     </div>
 </template>
 <script>
+import {mapState,mapMutations} from 'vuex'
 export default {
   data() {
     return {
@@ -48,6 +49,9 @@ export default {
       isPlay: true,
       danmuOn:true
     };
+  },
+  computed:{    
+    ...mapState(['audio','playList','playMode']),
   },
   mounted() {
     let detailid = this.$route.params.id;
@@ -60,8 +64,10 @@ export default {
         let detailInfo = res.data.data[detailid].sound;
         this.detailData = detailInfo;
         this.userData = detailInfo.user;
-        console.log(res);
-        console.log(this.detailData);
+
+        this.setAudioData(detailInfo);
+        console.log(detailInfo);
+        console.log(this.userData);
       })
       .catch(error => {
         console.log(error);
@@ -70,7 +76,9 @@ export default {
   methods:{
     toggleDanmu(){
       this.danmuOn=!this.danmuOn;
-    }
+    },
+    
+    ...mapMutations(['setAudioData','setAudioStatus','setAudioDuration','setAudioCurtime','setPlaylist']),
   }
 };
 </script>
@@ -165,6 +173,14 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content:center;
+        .up-info{
+          display: block;
+          font-size: .24rem;
+          margin-top: .05rem;
+          a{
+            padding: 0 .2rem
+          }
+        }
       }
       .danmu-switch{
         width: 1.1rem;height: .5rem;border-radius: .4rem;line-height: .5rem;text-align: center;

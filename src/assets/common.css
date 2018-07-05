@@ -57,7 +57,7 @@ a {
     background: transparent;
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
-    color: #0088cc;
+    color: #6ed56c;
 }
 
 a:active {
@@ -301,10 +301,11 @@ textarea::-webkit-input-placeholder {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-html,body{width: 100%;overflow-x: hidden}
+html,body{width: 100%;overflow-x: hidden;min-height: 100vh}
 body{font-size: .26rem}
 .clearfix:after{visibility:hidden;display: block;content: '';clear: both;height: 0;font-size: 0;}
 .thumbnailW img{display: block;width: 100%;height: auto;}
+.thumbnailH img{display: block;height: 100%;width: auto;}
 .tag_blue{background-position: -299px -215px;}
 .tag_red{background-position: -162px -215px;}
 .tag_orange{background-position: 0px -215px;}
