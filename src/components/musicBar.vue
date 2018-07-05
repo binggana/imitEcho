@@ -122,5 +122,6 @@ export default {
   .play-list {
     bottom: 0.96rem;
     z-index: 1;
+    font-size: .28rem;
   }
 </style>
