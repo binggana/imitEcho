@@ -34,7 +34,7 @@
         </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState,mapActions } from "vuex";
 export default {
   name: "musicbar",
   computed: {
@@ -47,6 +47,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['getAudioEle','setAudioStatus','setAudioDuration','setAudioCurtime']),
     togglePlay() {
       this.iconplay =
         this.iconplay == "icon-pause" ? "icon-play" : "icon-pause";
