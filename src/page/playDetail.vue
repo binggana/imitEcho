@@ -39,7 +39,7 @@
     </div>
 </template>
 <script>
-import {mapState,mapMutations} from 'vuex'
+import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -47,39 +47,62 @@ export default {
       userData: {},
       detailData: {},
       isPlay: true,
-      danmuOn:true
+      danmuOn: true
     };
   },
-  computed:{    
-    ...mapState(['audio','playList','playMode']),
+  computed: {
+    ...mapState(["audio", "playList", "playMode"])
   },
   mounted() {
-    let detailid = this.$route.params.id;
-    //console.log(detailid);
-    this.$axios
-      .get(
-        "https://www.easy-mock.com/mock/5b34aeb8e1815c19167faa21/imitecho/echoindex"
-      )
-      .then(res => {
-        let detailInfo = res.data.data[detailid].sound;
-        this.detailData = detailInfo;
-        this.userData = detailInfo.user;
-
-        this.setAudioData(detailInfo);
-        console.log(detailInfo);
-        console.log(this.userData);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    this.getDatas();
   },
-  methods:{
-    toggleDanmu(){
-      this.danmuOn=!this.danmuOn;
+  methods: {
+    toggleDanmu() {
+      this.danmuOn = !this.danmuOn;
     },
-    
-    ...mapMutations(['setAudioData','setAudioStatus','setAudioDuration','setAudioCurtime','setPlaylist']),
-  }
+    getDatas() {
+      let detailid = this.$route.params.id;
+      //console.log(detailid);
+      this.$axios
+        .get(
+          "https://www.easy-mock.com/mock/5b34aeb8e1815c19167faa21/imitecho/echoindex"
+        )
+        .then(res => {
+          /*开发环境数据 */
+          console.log('原始id:'+detailid)
+          detailid = (detailid > 5)?detailid % 5: detailid;
+          console.log('处理id:'+detailid);
+          let detailInfo = res.data.data[detailid].sound;
+          /*开发环境数据 */
+
+          this.detailData = detailInfo;
+          this.userData = detailInfo.user;
+
+          this.setAudioData(detailInfo);
+          this.setPlaylist(detailInfo);
+          console.log(detailInfo);
+          console.log(this.userData);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+
+    ...mapMutations([
+      "setAudioData",
+      "setAudioStatus",
+      "setAudioDuration",
+      "setAudioCurtime",
+      "setPlaylist"
+    ])
+  },
+  // watch:{
+  //    $route(to, from) {
+  //           if (this.$route.path.includes('detail')) {
+  //               this.getDatas()
+  //           }
+  //       }
+  // }
 };
 </script>
 <style lang="scss" scoped>
@@ -134,7 +157,7 @@ export default {
         font-style: normal;
         font-size: 0.2rem;
         color: #fff;
-        margin-left: .2rem;
+        margin-left: 0.2rem;
       }
       span {
         position: absolute;
@@ -159,39 +182,48 @@ export default {
       width: 100%;
       height: 1.1rem;
       background-color: rgba(0, 0, 0, 0.5);
-      padding: 0 .2rem;
+      padding: 0 0.2rem;
       display: flex;
       align-items: center;
-      color:#fff;
+      color: #fff;
       .play-status {
-        width: .7rem;height: .7rem;
-        margin-right: .2rem;
-        background: url('~@/assets/images/pause.png') no-repeat center center;
+        width: 0.7rem;
+        height: 0.7rem;
+        margin-right: 0.2rem;
+        background: url("~@/assets/images/pause.png") no-repeat center center;
         background-size: cover;
       }
-      .audioname{
+      .audioname {
         display: flex;
         flex-direction: column;
-        justify-content:center;
-        .up-info{
+        justify-content: center;
+        .up-info {
           display: block;
-          font-size: .24rem;
-          margin-top: .05rem;
-          a{
-            padding: 0 .2rem
+          font-size: 0.24rem;
+          margin-top: 0.05rem;
+          a {
+            padding: 0 0.2rem;
           }
         }
       }
-      .danmu-switch{
-        width: 1.1rem;height: .5rem;border-radius: .4rem;line-height: .5rem;text-align: center;
-        flex-shrink: 0;position: absolute;right: .2rem;
+      .danmu-switch {
+        width: 1.1rem;
+        height: 0.5rem;
+        border-radius: 0.4rem;
+        line-height: 0.5rem;
+        text-align: center;
+        flex-shrink: 0;
+        position: absolute;
+        right: 0.2rem;
         background-color: #666666;
-        .switch-status{
-          width: .89rem;border-radius: .4rem;
+        .switch-status {
+          width: 0.89rem;
+          border-radius: 0.4rem;
           background-color: #aab2aa;
-          position: absolute;left: 0;
-          transition: .3s ease;
-          &.on{
+          position: absolute;
+          left: 0;
+          transition: 0.3s ease;
+          &.on {
             background-color: #6be659;
             left: auto;
             right: 0;

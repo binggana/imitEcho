@@ -19,10 +19,18 @@
                 <i class="icon icon-next"></i>
             </div>
         </div>
+        <!-- 音乐播放-->
+        <audio :src="audio.data.source" autoplay></audio>
+
     </div>
     
         <!-- 播放列表 -->
-        <mt-actionsheet class="play-list" :actions="actions" v-model="sheetVisible" cancelText=""></mt-actionsheet>
+        <mt-popup v-model="popupVisible" position="bottom" :modal="false" class="play-list">
+          <p class="title">播放列表<span>({{playList.length}})首</span></p>
+          <ul class="lists-box">
+            <li v-for='(item,index) in playList' :key="index">{{item.name}}</li>
+          </ul>
+        </mt-popup>
         </div>
 </template>
 <script>
@@ -30,13 +38,12 @@ import { mapState } from "vuex";
 export default {
   name: "musicbar",
   computed: {
-    ...mapState(["audio"])
+    ...mapState(["audio", "playList", "playMode"])
   },
   data() {
     return {
       iconplay: "icon-pause",
-      actions: [{ name: "选项一" }, { name: "选项二" }],
-      sheetVisible: false
+      popupVisible: false
     };
   },
   methods: {
@@ -45,7 +52,7 @@ export default {
         this.iconplay == "icon-pause" ? "icon-play" : "icon-pause";
     },
     toggleList() {
-      this.sheetVisible = !this.sheetVisible;
+      this.popupVisible = !this.popupVisible;
     }
   }
 };
@@ -119,9 +126,34 @@ export default {
   }
 }
 
-  .play-list {
-    bottom: 0.96rem;
-    z-index: 1;
-    font-size: .28rem;
+.play-list {
+  width: 100%;
+  bottom: 0.96rem;
+  z-index: 1;
+  font-size: 0.28rem;
+  border-top: 1px solid #e8e8e8;
+  padding: 0.2rem 0;
+  p.title {
+    color: #6ed56c;
+    text-align: center;
+    font-size: 0.28rem;
+    margin-bottom: .25rem;
+    span {
+      font-size: 0.24rem;
+      padding-left: 0.1rem;
+    }
   }
+  .lists-box {
+  height: 2rem;
+  overflow-y: scroll;
+    li {
+      padding: .2rem;
+      font-size: .24rem;
+      color: #909090;
+      &:not(:last-of-type){
+        border-bottom: 1px solid #f3f3f3;
+      }
+    }
+  }
+}
 </style>
