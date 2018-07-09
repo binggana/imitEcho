@@ -53,7 +53,7 @@ export default {
   computed: {
     ...mapState(["audio", "playList", "playMode"])
   },
-  mounted() {
+  created() {
     this.getDatas();
   },
   methods: {

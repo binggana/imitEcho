@@ -19,7 +19,7 @@ const state = {
 
 const mutations = {
     //获取音乐播放元素
-    getAudioEle(state,val){
+    setAudioEle(state,val){
         state.audio.ele=val;
     },
     //设置音乐数据
@@ -52,6 +52,9 @@ const mutations = {
 }
 
 const getters = {
+    audioData(state){
+       return state.audio.data;
+    },
     //返回播放进度
     playProgress(state) {
         return state.audio.curTime / state.audio.duration;

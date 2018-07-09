@@ -42,7 +42,7 @@ export default {
     Banner,
     RecommandList
   },
-  mounted() {
+  created() {
     this.$axios
       .get("https://www.easy-mock.com/mock/5b34aeb8e1815c19167faa21/imitecho/")
       .then(res => {
