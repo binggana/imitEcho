@@ -20,7 +20,7 @@
             </div>
         </div>
         <!-- 音乐播放-->
-        <audio :src="audio.data.source" autoplay></audio>
+        <audio ref="mAudio" :src="audio.data.source" autoplay></audio>
 
     </div>
     
@@ -43,8 +43,11 @@ export default {
   data() {
     return {
       iconplay: "icon-pause",
-      popupVisible: false
+      popupVisible: false,
     };
+  },
+  mounted(){
+    this.audioInit();
   },
   methods: {
     ...mapActions(['getAudioEle','setAudioStatus','setAudioDuration','setAudioCurtime']),
@@ -54,6 +57,10 @@ export default {
     },
     toggleList() {
       this.popupVisible = !this.popupVisible;
+    },
+    audioInit(){
+        let mAudio=this.$ref.mAudio;
+        console.log(mAudio);
     }
   }
 };

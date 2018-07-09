@@ -69,9 +69,9 @@ export default {
         )
         .then(res => {
           /*开发环境数据 */
-          console.log('原始id:'+detailid)
+          //console.log('原始id:'+detailid);
           detailid = (detailid > 5)?detailid % 5: detailid;
-          console.log('处理id:'+detailid);
+          //console.log('处理id:'+detailid);
           let detailInfo = res.data.data[detailid].sound;
           /*开发环境数据 */
 
