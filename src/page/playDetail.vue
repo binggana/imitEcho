@@ -20,8 +20,8 @@
         <div class="audioinfo">
           <!-- 播放进度 -->
           <div class="progress">
-            <em>12.23253525</em>
-            <span></span>
+            <em>{{audio.curTime |numToClock}}/{{audio.duration|numToClock}}</em>
+            <span :style="{width:playProgress+'%'}"></span>
           </div>
           <div class="audioinfo-box">
               <div class="play-status" :class="{play:isPlay}"></div>
@@ -47,11 +47,14 @@ export default {
       userData: {},
       detailData: {},
       isPlay: true,
-      danmuOn: true
+      danmuOn: true,
     };
   },
   computed: {
-    ...mapState(["audio", "playList", "playMode"])
+    ...mapState(["audio", "playList", "playMode"]),
+    playProgress(){
+      return (this.audio.curTime/this.audio.duration)*100;
+    }
   },
   created() {
     this.getDatas();
@@ -162,7 +165,7 @@ export default {
       span {
         position: absolute;
         min-width: 0.09rem;
-        width: 100%;
+        // width: 100%;
         height: 100%;
         top: 0;
         left: 0;

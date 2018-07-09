@@ -8,7 +8,7 @@ const state = {
     audio: {
         ele:null,
         data: null,
-        playStatus: false,//播放状态,
+        playStatus: false,//播放状态-----[true]表示播放状态,
         duration: 0,//当前歌曲总时长
         curTime: 0,//播放时间
 
@@ -52,9 +52,6 @@ const mutations = {
 }
 
 const getters = {
-    audioData(state){
-       return state.audio.data;
-    },
     //返回播放进度
     playProgress(state) {
         return state.audio.curTime / state.audio.duration;

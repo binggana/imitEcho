@@ -31,10 +31,10 @@
             <li v-for='(item,index) in playList' :key="index">{{item.name}}</li>
           </ul>
         </mt-popup>
-        </div>
+</div>
 </template>
 <script>
-import { mapState,mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "musicbar",
   computed: {
@@ -43,21 +43,58 @@ export default {
   data() {
     return {
       iconplay: "icon-pause",
-      popupVisible: false,
+      popupVisible: false
     };
   },
-  mounted(){
+  updated(){
     this.audioInit();
   },
   methods: {
-    ...mapMutations(['getAudioEle','setAudioStatus','setAudioDuration','setAudioCurtime']),
+    ...mapMutations([
+      "setAudioEle",
+      "setAudioStatus",
+      "setAudioDuration",
+      "setAudioCurtime"
+    ]),
+    //audio相关操作
+    audioInit(){
+      let audioEle=this.$refs.music;
+      this.setAudioEle(audioEle);
+
+      //当audio可以播放时触发canplay
+      audioEle.oncanplay=()=>{
+        audioEle.play();
+        console.log("当前歌曲总时长(秒)："+audioEle.duration);
+        this.setAudioDuration(audioEle.duration);
+      };
+
+      //audio播放位置发生改变时触发timeupdate
+      audioEle.ontimeupdate=()=>{
+        let curTime=audioEle.currentTime;
+        console.log("当前播放时间"+curTime);
+        this.setAudioCurtime(curTime);
+      };
+      /*状态*/
+      audioEle.onplay=()=>{
+        this.setAudioStatus(true);
+      };
+      audioEle.onpause=()=>{
+        this.setAudioStatus(false);
+      };
+      audioEle.onended=()=>{
+        this.setAudioStatus(false);
+      };
+
+    },
     togglePlay() {
-      this.iconplay =this.iconplay == "icon-pause" ? "icon-play" : "icon-pause";
-      let audioStatus=this.$refs.music.paused?false:true;
-      //console.log(audioStatus);
-      this.setAudioStatus(audioStatus);
-      (this.audio.playStatus)?(this.$refs.music.pause()):(this.$refs.music.play());
-      
+      console.log(this.audio.playStatus);
+      this.iconplay =this.audio.playStatus?"icon-play" : "icon-pause";
+      // this.iconplay =
+      //   this.iconplay == "icon-pause" ? "icon-play" : "icon-pause";
+      // let audioStatus = this.$refs.music.paused ? false : true;
+      // //console.log(audioStatus);
+      // this.setAudioStatus(audioStatus);
+      // this.audio.playStatus? this.$refs.music.pause(): this.$refs.music.play();
     },
     toggleList() {
       this.popupVisible = !this.popupVisible;
@@ -146,20 +183,20 @@ export default {
     color: #6ed56c;
     text-align: center;
     font-size: 0.28rem;
-    margin-bottom: .25rem;
+    margin-bottom: 0.25rem;
     span {
       font-size: 0.24rem;
       padding-left: 0.1rem;
     }
   }
   .lists-box {
-  height: 2rem;
-  overflow-y: scroll;
+    height: 2rem;
+    overflow-y: scroll;
     li {
-      padding: .2rem;
-      font-size: .24rem;
+      padding: 0.2rem;
+      font-size: 0.24rem;
       color: #909090;
-      &:not(:last-of-type){
+      &:not(:last-of-type) {
         border-bottom: 1px solid #f3f3f3;
       }
     }
