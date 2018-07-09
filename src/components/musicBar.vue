@@ -20,7 +20,7 @@
             </div>
         </div>
         <!-- 音乐播放-->
-        <audio ref="mAudio" :src="audio.data.source" autoplay></audio>
+        <audio ref='music' :src="audio.data.source" autoplay></audio>
 
     </div>
     
@@ -34,7 +34,7 @@
         </div>
 </template>
 <script>
-import { mapState,mapActions } from "vuex";
+import { mapState,mapMutations } from "vuex";
 export default {
   name: "musicbar",
   computed: {
@@ -50,17 +50,18 @@ export default {
     this.audioInit();
   },
   methods: {
-    ...mapActions(['getAudioEle','setAudioStatus','setAudioDuration','setAudioCurtime']),
+    ...mapMutations(['getAudioEle','setAudioStatus','setAudioDuration','setAudioCurtime']),
     togglePlay() {
-      this.iconplay =
-        this.iconplay == "icon-pause" ? "icon-play" : "icon-pause";
+      this.iconplay =this.iconplay == "icon-pause" ? "icon-play" : "icon-pause";
+      let audioStatus=this.$refs.music.paused?false:true;
+      //console.log(audioStatus);
+      this.setAudioStatus(audioStatus);
+      (this.audio.playStatus)?(this.$refs.music.pause()):(this.$refs.music.play());
+      
     },
     toggleList() {
       this.popupVisible = !this.popupVisible;
-    },
-    audioInit(){
-        let mAudio=this.$ref.mAudio;
-        console.log(mAudio);
+      console.log(this.$refs.music.duration);
     }
   }
 };
