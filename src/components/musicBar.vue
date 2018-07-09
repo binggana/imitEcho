@@ -88,6 +88,9 @@ export default {
     },
     togglePlay() {
       console.log(this.audio.playStatus);
+      let audioStatus = this.audio.ele.paused ? false : true;
+      this.setAudioStatus(audioStatus);
+      this.audio.playStatus? this.audio.ele.pause(): this.audio.ele.play();
       this.iconplay =this.audio.playStatus?"icon-play" : "icon-pause";
       // this.iconplay =
       //   this.iconplay == "icon-pause" ? "icon-play" : "icon-pause";

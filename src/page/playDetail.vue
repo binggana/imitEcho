@@ -20,7 +20,7 @@
         <div class="audioinfo">
           <!-- 播放进度 -->
           <div class="progress">
-            <em>{{audio.curTime |numToClock}}/{{audio.duration|numToClock}}</em>
+            <em>{{audio.curTime |numToClock}} / {{audio.duration|numToClock}}</em>
             <span :style="{width:playProgress+'%'}"></span>
           </div>
           <div class="audioinfo-box">
@@ -161,6 +161,8 @@ export default {
         font-size: 0.2rem;
         color: #fff;
         margin-left: 0.2rem;
+        position: relative;
+        z-index: 99;
       }
       span {
         position: absolute;
