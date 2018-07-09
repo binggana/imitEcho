@@ -38,11 +38,15 @@ import { mapState, mapMutations } from "vuex";
 export default {
   name: "musicbar",
   computed: {
-    ...mapState(["audio", "playList", "playMode"])
+    ...mapState(["audio", "playList", "playMode"]),
+    iconplay(){
+      console.log(this.audio.playStatus);
+      return this.audio.playStatus?"icon-pause" : "icon-play";
+    }
   },
   data() {
     return {
-      iconplay: "icon-pause",
+      //iconplay: "icon-pause",
       popupVisible: false
     };
   },
