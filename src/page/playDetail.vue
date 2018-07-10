@@ -4,9 +4,12 @@
         <!-- up主信息 -->
         <div class="top">
             <div class="userinfo">
-              <span class="avatar">
-                <img :src="audio.data.user.avatar_50" alt="">
-              </span>
+              <div class="avatar-box">
+                <div class="avatar"><img :src="audio.data.user.avatar_50" :alt="audio.data.user.name"></div>
+                <div class="famous-tag" v-if="userData.famous_icon">
+                  <img :src="userData.famous_icon">
+                </div>
+              </div>
               <span class="txt-over-hidden">{{audio.data.user.name}}</span>
             </div>
             <div class="fans">粉丝：{{audio.data.user.followed_count |numConvert}}</div>
@@ -24,7 +27,7 @@
             <span :style="{width:playProgress+'%'}"></span>
           </div>
           <div class="audioinfo-box">
-              <div class="play-status" :class="{pause:isPause}"></div>
+              <div class="play-status" :class="{pause:isPause}" @click="setAudioStatus(isPause)"></div>
               <div class="audioname">
                 <span>{{audio.data.name}}</span>
                 <span class="up-info"><router-link to='/'>{{audio.data.user.name}}</router-link>发布在<router-link to='/'>{{audio.data.channel.name}}</router-link></span>
@@ -52,7 +55,7 @@ export default {
   computed: {
     ...mapState(["audio", "playList", "playMode"]),
     ...mapGetters(["playProgress", "audioPlayStatus"]),
-    isPause(){
+    isPause() {
       return !this.audio.playStatus;
     }
   },
@@ -95,8 +98,6 @@ export default {
     ...mapMutations([
       "setAudioData",
       "setAudioStatus",
-      "setAudioDuration",
-      "setAudioCurtime",
       "setPlaylist"
     ]),
 
@@ -104,7 +105,6 @@ export default {
     beat(e) {
       console.log(e.changedTouches[0].pageX, window.innerWidth);
       let progress = (e.changedTouches[0].pageX / window.innerWidth).toFixed(2);
-      //this.setAudioCurtime(progress*this.audio.duration);
       this.audio.ele.currentTime = progress * this.audio.duration;
       //console.log(progress,progress*this.audio.duration);
     }
@@ -135,18 +135,37 @@ export default {
   display: flex;
   align-items: center;
   width: 66%;
-  .avatar {
+  .avatar-box {
     display: block;
     width: 0.7rem;
     height: 0.7rem;
-    border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
     margin-right: 0.2rem;
-    img {
+    position: relative;
+    .avatar {
       display: block;
       width: 100%;
       height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .famous-tag {
+      width: 0.28rem;
+      height: 0.28rem;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
     }
   }
   span {
