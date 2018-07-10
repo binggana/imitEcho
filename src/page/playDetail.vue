@@ -19,12 +19,12 @@
         <!-- 歌曲信息 -->
         <div class="audioinfo">
           <!-- 播放进度 -->
-          <div class="progress">
+          <div class="progress" @touchstart.stop="beat">
             <em>{{audio.curTime |numToClock}} / {{audio.duration|numToClock}}</em>
             <span :style="{width:playProgress+'%'}"></span>
           </div>
           <div class="audioinfo-box">
-              <div class="play-status" :class="{play:isPlay}"></div>
+              <div class="play-status" :class="{pause:isPause}"></div>
               <div class="audioname">
                 <span>{{audio.data.name}}</span>
                 <span class="up-info"><router-link to='/'>{{audio.data.user.name}}</router-link>发布在<router-link to='/'>{{audio.data.channel.name}}</router-link></span>
@@ -39,21 +39,21 @@
     </div>
 </template>
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
       mtitle: null,
       userData: {},
       detailData: {},
-      isPlay: true,
-      danmuOn: true,
+      danmuOn: true
     };
   },
   computed: {
     ...mapState(["audio", "playList", "playMode"]),
-    playProgress(){
-      return (this.audio.curTime/this.audio.duration)*100;
+    ...mapGetters(["playProgress", "audioPlayStatus"]),
+    isPause(){
+      return !this.audio.playStatus;
     }
   },
   created() {
@@ -73,7 +73,7 @@ export default {
         .then(res => {
           /*开发环境数据 */
           //console.log('原始id:'+detailid);
-          detailid = (detailid > 5)?detailid % 5: detailid;
+          detailid = detailid > 5 ? detailid % 5 : detailid;
           //console.log('处理id:'+detailid);
           let detailInfo = res.data.data[detailid].sound;
           /*开发环境数据 */
@@ -85,6 +85,7 @@ export default {
           this.setPlaylist(detailInfo);
           console.log(detailInfo);
           console.log(this.userData);
+          this.mtitle = detailInfo.name;
         })
         .catch(error => {
           console.log(error);
@@ -97,8 +98,17 @@ export default {
       "setAudioDuration",
       "setAudioCurtime",
       "setPlaylist"
-    ])
-  },
+    ]),
+
+    //触摸进度条
+    beat(e) {
+      console.log(e.changedTouches[0].pageX, window.innerWidth);
+      let progress = (e.changedTouches[0].pageX / window.innerWidth).toFixed(2);
+      //this.setAudioCurtime(progress*this.audio.duration);
+      this.audio.ele.currentTime = progress * this.audio.duration;
+      //console.log(progress,progress*this.audio.duration);
+    }
+  }
   // watch:{
   //    $route(to, from) {
   //           if (this.$route.path.includes('detail')) {
@@ -171,7 +181,7 @@ export default {
         height: 100%;
         top: 0;
         left: 0;
-        background-color: rgba(110, 213, 108, 0.2);
+        background-color: rgba(76, 245, 73, 0.34);
         &:after {
           position: absolute;
           content: "";
@@ -195,8 +205,12 @@ export default {
         width: 0.7rem;
         height: 0.7rem;
         margin-right: 0.2rem;
-        background: url("~@/assets/images/pause.png") no-repeat center center;
+        background: url("~@/assets/images/play.png") no-repeat center center;
         background-size: cover;
+        &.pause {
+          background: url("~@/assets/images/pause.png") no-repeat;
+          background-size: cover;
+        }
       }
       .audioname {
         display: flex;

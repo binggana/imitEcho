@@ -52,9 +52,17 @@ const mutations = {
 }
 
 const getters = {
+    //返回audios元数据，方便侦听数据变化
+    audioData(state){
+        return state.audio.data;
+    },
+    //返回audio播放状态
+    audioPlayStatus(state){
+        return state.audio.playStatus;
+    },
     //返回播放进度
     playProgress(state) {
-        return state.audio.curTime / state.audio.duration;
+        return ((state.audio.curTime/state.audio.duration)*100).toFixed(2);
     }
 }
 

@@ -1,18 +1,18 @@
 <template>
 <div>
     <div class="music-bar">
-        <div class="thumbnailH">
+        <router-link class="thumbnailH" :to="'/detail/'+audio.data.channel_id">
             <img :src="audio.data.pic_100" alt="audio.data.name">
-        </div>
+        </router-link>
         <div class="audio-txt">
-            <p class="txt-over-hidden">{{audio.data.name}}fsdfsfsfsaf打算打打法法</p>
+            <p class="txt-over-hidden">{{audio.data.name}}</p>
             <span class="txt-over-hidden">{{audio.data.user.name}}</span>
         </div>
         <div class="contorls">
             <div class="lists" @click='toggleList'>
                 <i class="icon icon-list"></i>
             </div>
-            <div class="play" @click='togglePlay'>
+            <div class="play" @click='setAudioStatus(!audio.playStatus)'>
                 <i class="icon" :class="iconplay"></i>
                 </div>
             <div class="next">
@@ -28,19 +28,20 @@
         <mt-popup v-model="popupVisible" position="bottom" :modal="false" class="play-list">
           <p class="title">播放列表<span>({{playList.length}})首</span></p>
           <ul class="lists-box">
-            <li v-for='(item,index) in playList' :key="index">{{item.name}}</li>
+            <li v-for='(item,index) in playList' :key="index" :class="[item.channel_id==audio.data.channel_id?'active':'']">{{item.name}}</li>
           </ul>
         </mt-popup>
 </div>
 </template>
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState,mapGetters, mapMutations } from "vuex";
 export default {
   name: "musicbar",
   computed: {
     ...mapState(["audio", "playList", "playMode"]),
+    ...mapGetters(['audioData','audioPlayStatus']),
     iconplay(){
-      console.log(this.audio.playStatus);
+      //console.log(this.audio.playStatus);
       return this.audio.playStatus?"icon-pause" : "icon-play";
     }
   },
@@ -50,8 +51,22 @@ export default {
       popupVisible: false
     };
   },
-  updated(){
-    this.audioInit();
+  // updated(){
+  //   this.audioInit();
+  // },
+  watch:{
+    //侦听audio元数据是否发生变化，变化后重载audio
+    audioData(val){
+      if(val){
+        this.$nextTick(()=>{
+          this.audioInit();
+        })
+      }
+    },
+    //侦听播放状态变化
+    audioPlayStatus(val){
+      val?(this.audio.ele.play()):(this.audio.ele.pause());
+    }
   },
   methods: {
     ...mapMutations([
@@ -68,14 +83,14 @@ export default {
       //当audio可以播放时触发canplay
       audioEle.oncanplay=()=>{
         audioEle.play();
-        console.log("当前歌曲总时长(秒)："+audioEle.duration);
+        //console.log("当前歌曲总时长(秒)："+audioEle.duration);
         this.setAudioDuration(audioEle.duration);
       };
 
       //audio播放位置发生改变时触发timeupdate
       audioEle.ontimeupdate=()=>{
         let curTime=audioEle.currentTime;
-        console.log("当前播放时间"+curTime);
+        //console.log("当前播放时间"+curTime);
         this.setAudioCurtime(curTime);
       };
       /*状态*/
@@ -89,19 +104,6 @@ export default {
         this.setAudioStatus(false);
       };
 
-    },
-    togglePlay() {
-      console.log(this.audio.playStatus);
-      let audioStatus = this.audio.ele.paused ? false : true;
-      this.setAudioStatus(audioStatus);
-      this.audio.playStatus? this.audio.ele.pause(): this.audio.ele.play();
-      this.iconplay =this.audio.playStatus?"icon-play" : "icon-pause";
-      // this.iconplay =
-      //   this.iconplay == "icon-pause" ? "icon-play" : "icon-pause";
-      // let audioStatus = this.$refs.music.paused ? false : true;
-      // //console.log(audioStatus);
-      // this.setAudioStatus(audioStatus);
-      // this.audio.playStatus? this.$refs.music.pause(): this.$refs.music.play();
     },
     toggleList() {
       this.popupVisible = !this.popupVisible;
@@ -185,7 +187,7 @@ export default {
   z-index: 1;
   font-size: 0.28rem;
   border-top: 1px solid #e8e8e8;
-  padding: 0.2rem 0;
+  padding-top: 0.2rem;
   p.title {
     color: #6ed56c;
     text-align: center;
@@ -205,6 +207,9 @@ export default {
       color: #909090;
       &:not(:last-of-type) {
         border-bottom: 1px solid #f3f3f3;
+      }
+      &.active{
+        color:#6ed56c;
       }
     }
   }

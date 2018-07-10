@@ -16,7 +16,7 @@ let numToClock=(val)=>{
         let sec=intSec % 60;//秒
         //显示时间格式整理
         minutes=minutes>10?minutes:"0"+minutes;
-        sec=sec>10?sec:"0"+sec;
+        sec=sec>=10?sec:"0"+sec;
         return minutes+":"+sec;
     }else{
         return "00:00";
