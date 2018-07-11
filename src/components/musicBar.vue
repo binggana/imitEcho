@@ -15,7 +15,7 @@
             <div class="play" @click='setAudioStatus(!audio.playStatus)'>
                 <i class="icon" :class="iconplay"></i>
                 </div>
-            <div class="next">
+            <div class="next" @click='playRepeat'>
                 <i class="icon icon-next"></i>
             </div>
         </div>
@@ -25,10 +25,10 @@
     </div>
     
         <!-- 播放列表 -->
-        <mt-popup v-model="popupVisible" position="bottom" :modal="false" class="play-list">
-          <p class="title">播放列表<span>({{playList.length}})首</span></p>
+        <mt-popup v-model="popupVisible" position="bottom" class="play-list">
+          <p class="title">播放列表<span>({{playList.length}}首)</span></p>
           <ul class="lists-box">
-            <li v-for='(item,index) in playList' :key="index" :class="[item.channel_id==audio.data.channel_id?'active':'']">{{item.name}}</li>
+            <li v-for='(item,index) in playList' :key="index" :class="[item.channel_id==audio.data.channel_id?'active':'']" @click.stop='setAudioData(item)'>{{item.name}}</li>
           </ul>
         </mt-popup>
 </div>
@@ -71,6 +71,7 @@ export default {
   methods: {
     ...mapMutations([
       "setAudioEle",
+      'setAudioData',
       "setAudioStatus",
       "setAudioDuration",
       "setAudioCurtime"
@@ -102,13 +103,32 @@ export default {
       };
       audioEle.onended=()=>{
         this.setAudioStatus(false);
+        this.playRepeat();
       };
 
     },
     toggleList() {
       this.popupVisible = !this.popupVisible;
       console.log(this.$refs.music.duration);
+    },
+
+    playRepeat(){
+      console.log(this.playList);
+      let curIndex=this.playList.findIndex((val)=>val.channel_id==this.audio.data.channel_id);
+      //判断当前音乐是否是列表中的最后一首？ "第一首":"下一首"
+      let nextIndex=(curIndex==this.playList.length-1)? '0':curIndex+1;
+      console.log(curIndex,this.playList.length-1);
+      //如果列表只有一首当前正在播放，就继续单曲循环
+      if(this.playList[nextIndex].channel_id==this.audio.data.channel_id){
+        console.log(this.playList[nextIndex].channel_id,this.audio.data.channel_id)
+        this.audio.ele.load();
+        this.audio.ele.play();
+      }else{
+        this.setAudioData(this.playList[nextIndex]);
+      }
+
     }
+
   }
 };
 </script>
@@ -202,14 +222,29 @@ export default {
     height: 2rem;
     overflow-y: scroll;
     li {
-      padding: 0.2rem;
+      padding: 0.2rem .2rem .2rem .35rem;
       font-size: 0.24rem;
       color: #909090;
+      position: relative;
       &:not(:last-of-type) {
         border-bottom: 1px solid #f3f3f3;
       }
+      &:before{
+        content: '';
+        position: absolute;
+        width: .1rem;
+        height: .1rem;
+        background-color: #c7c7c7;
+        border-radius: 50%;
+        top:50%;
+        margin-top: -.05rem;
+        left: .1rem;
+      }
       &.active{
         color:#6ed56c;
+        &:before{
+          background-color:#6ed56c; 
+        }
       }
     }
   }

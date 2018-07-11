@@ -44,6 +44,7 @@ const mutations = {
             return item.channel_id==val.channel_id;
         });
         //console.log(result,result!=undefined);
+        //id不同的音乐加入播放列表
         if (result==undefined){
             state.playList.unshift(val);
         }
